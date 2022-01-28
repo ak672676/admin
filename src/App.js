@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 
 import "./app.css";
 
@@ -11,23 +16,45 @@ import NewUser from "./pages/newUser/NewUser";
 import ProductList from "./pages/productList/ProductList";
 import Product from "./pages/product/Product";
 import NewProduct from "./pages/newProduct/NewProduct";
+import Login from "./pages/login/Login";
+import { useState } from "react";
 
 function App() {
+  let [user, setUser] = useState("ss");
   return (
     <Router>
-      <Topbar />
-      <div className="container">
-        <Sidebar />
-        <Routes>
-          <Route path="/" exact element={<Home />} />
-          <Route path="/users" element={<UserList />} />
-          <Route path="/user/:userId" element={<User />} />
-          <Route path="/newUser" element={<NewUser />} />
-          <Route path="/products" element={<ProductList />} />
-          <Route path="/product/:productId" element={<Product />} />
-          <Route path="/newproduct" element={<NewProduct />} />
-        </Routes>
-      </div>
+      <Switch>
+        <Route path="/login">{user ? <Redirect to="/" /> : <Login />}</Route>
+        {user && (
+          <>
+            <Topbar />
+            <div className="container">
+              <Sidebar />
+              <Route exact path="/">
+                <Home />
+              </Route>
+              <Route path="/users">
+                <UserList />
+              </Route>
+              <Route path="/user/:userId">
+                <User />
+              </Route>
+              <Route path="/newUser">
+                <NewUser />
+              </Route>
+              <Route path="/products">
+                <ProductList />
+              </Route>
+              <Route path="/product/:productId">
+                <Product />
+              </Route>
+              <Route path="/newproduct">
+                <NewProduct />
+              </Route>
+            </div>
+          </>
+        )}
+      </Switch>
     </Router>
   );
 }
